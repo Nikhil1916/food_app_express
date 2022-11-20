@@ -40,8 +40,8 @@ useRouter
 
 authRouter
   .route("/signup")
-  .get()
-  .post()
+  .get(getSignUpPage)
+  .post(postSignup)
 
 function getUser(req, res) {
   console.log(req.query);
@@ -117,7 +117,15 @@ function getUserById(req, res) {
 }
 
 function getSignUpPage(req, res) {
-  res.send('/public/index.html', { root: __dirname });
+  res.sendFile("./public/index.html", { root: __dirname });
+}
+
+function postSignup(req, res) {
+  let { name, email, password } = req.body;
+  res.json({
+    message: "user added",
+    user: req.body
+  })
 }
 
 app.listen(5000);

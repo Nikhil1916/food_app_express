@@ -16,12 +16,28 @@
       <br />
       <input type="text" name="name" />
       <br />
-      <label for="password"></label>
+      <label for="password">Password</label>
       <br />
       <input type="password" name="password" />
+      <br />
+      <button type="submit">Submit</button>
     </form>
     <!-- axios post  -->
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
-    <script></script>
+    <script>
+      let submitBtn = document.querySelector("button");
+      submitBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const name = document.querySelector("input[type='text']").value;
+        const email = document.querySelector("input[type='email']").value;
+        const password = document.querySelector("input[type='password']").value;
+        let response = await axios.post("/auth/signup", {
+          name,
+          email,
+          password,
+        });
+        console.log(response);
+      });
+    </script>
   </body>
 </html>
