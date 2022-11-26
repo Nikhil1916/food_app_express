@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const moongoose = require('mongoose');
+const { db_link } = require("./secrets")
 app.use(express.json());
 
 let user = [
@@ -22,18 +24,19 @@ let user = [
 
 const useRouter = express.Router();
 const authRouter = express.Router();
-app.use("/user", useRouter);
+app.use("/users", useRouter);
 app.use("/auth", authRouter);
 
 
 useRouter
   .route("/")
-  .get(getUser)
+  .get(getUsers)
   .post(addUser)
   .delete(deleteUsers)
 
 useRouter
   .route("/:id")
+  // .get(middleware1, getUserById, middleware2)
   .get(getUserById)
   .patch(updateUser)
   .delete(deleteUserById)
@@ -43,21 +46,30 @@ authRouter
   .get(getSignUpPage)
   .post(postSignup)
 
-function getUser(req, res) {
-  console.log(req.query);
-  let { name, age } = req.query;
-  let isDataSend = false;
-  let filteredUsers = [];
-  if (typeof name == 'string' && name.length > 0) {
-    // filteredUsers = user.filter((user) => user.name.toLocaleLowerCase() == name.toLocaleLowerCase());
-    filteredUsers = user.filter((user) => user.name.toLocaleLowerCase() == name.toLocaleLowerCase());
-    isDataSend = true;
-  }
-  if (!!age && !isNaN(age) && Number(age) >= 0) {
-    filteredUsers = filteredUsers.filter((user) => user.age >= age); // use single & operater 
-    isDataSend = true;
-  }
-  res.send(isDataSend ? filteredUsers : user);
+//middleware in old way
+// app.get("/user/:id", middleware1, (req, res, next) => {
+//   next();
+// }, middleware2)
+
+async function getUsers(req, res, next) {
+  // console.log(req.query);
+  // let { name, age } = req.query;
+  // let filteredUsers = [...users];
+  // le
+  // if (typeof name == 'string' && name.length > 0) {
+  //   filteredUsers = user.filter((user) => user.name.toLocaleLowerCase() == name.toLocaleLowerCase());
+  // }
+
+  // if (!!age && !isNaN(age) && Number(age) >= 0) {
+  //   filteredUsers = filteredUsers.filter((user) => user.age >= age); // use single & operater 
+  // }
+  // res.send(filteredUsers);
+  // next();
+  let users = await userModel.find();
+  res.json({
+    msg: "user list",
+    users
+  });
 }
 
 function updateUser(req, res) {
@@ -73,14 +85,13 @@ function updateUser(req, res) {
   for (const key in dataToBeStored) {
     userObj[key] = dataToBeStored[key];
   }
-  user[index] = userObj
+  user[index] = userObj;
   res.json({
     message: "Data updated"
   })
 }
 
 function addUser(req, res) {
-  console.log(req.body);
   //then i can put this in db 
   let userObj = req.body;
   let addUser = {};
@@ -110,22 +121,80 @@ function deleteUserById(req, res) {
     });
 }
 
-function getUserById(req, res) {
+function getUserById(req, res, next) {
   console.log(req.params);
   let userData = user.find((data) => data.id == req.params.id);
   res.json({ message: "user id called", id: req.params, userData });
+  next();
 }
 
 function getSignUpPage(req, res) {
   res.sendFile("./public/index.html", { root: __dirname });
 }
 
-function postSignup(req, res) {
-  let { name, email, password } = req.body;
+async function postSignup(req, res) {
+  let data = req.body;
+  let user = await userModel.create(data);
   res.json({
     message: "user added",
-    user: req.body
+    user
   })
 }
 
+app.use("/", (req, res) => {
+  //if user not signed vali condition add krni..
+  res.redirect("/auth/signup");
+})
+
+// function middleware1(req, res, next) {
+//   console.log(1);
+//   next();
+// }
+// function middleware2(req, res, next) {
+//   console.log(2);
+// }
+
+moongoose.connect(db_link)
+  .then((db) => {
+    console.log("db connected");
+    // console.log(db);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+const userSchema = moongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 7
+  },
+  confirmPassword: {
+    type: String,
+    required: true,
+    minLength: 7
+  },
+})
+
+//models
+const userModel = moongoose.model("userModel", userSchema);
+// (async function createUser() {
+//   let user = {
+//     name: 'nikhil chawla',
+//     email: 'nikhil@gmail.com',
+//     password: 'abcdefg',
+//     confirmPassword: 'abcdefg'
+//   };
+//   let data = await userModel.create(user);
+//   console.log(data);
+// })()
 app.listen(5000);
