@@ -44,9 +44,9 @@ const userSchema = moongoose.Schema({
 
 userSchema.pre("save", async function () {
   this.confirmPassword = undefined;
-  let salt = await bcrypt.genSalt();
-  let hashedString = await bcrypt.hash(this.password, salt);
-  this.password = hashedString;
+  // let salt = await bcrypt.genSalt();
+  // let hashedString = await bcrypt.hash(this.password, salt);
+  // this.password = hashedString;
 })
 
 //models
