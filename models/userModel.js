@@ -11,7 +11,6 @@ moongoose.connect(db_link)
   });
 
 const userSchema = moongoose.Schema({
-
   name: {
     type: String,
     required: true
@@ -40,6 +39,17 @@ const userSchema = moongoose.Schema({
       return this.password == this.confirmPassword;
     }
   },
+
+  roles: {
+    type: String,
+    enum: ['admin', 'user', 'restaurantowner'],
+    default: ['user']
+  },
+
+  profileImage: {
+    type: String,
+    default: 'img.png'
+  }
 })
 
 userSchema.pre("save", async function () {
