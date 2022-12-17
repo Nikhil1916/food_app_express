@@ -11,9 +11,4 @@ const authRouter = require('./Routers/authRouter');
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 
-app.use("/", (req, res) => {
-  res.redirect("/auth/signup");
-})
-
-
 app.listen(5000);

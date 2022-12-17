@@ -1,11 +1,11 @@
 const userModel = require('../models/userModel');
 module.exports.getUser = async function (req, res, next) {
-  let id = req.params.id;
+  let id = req.params.id ?? req.id;
   try {
     let user = await userModel.findById(id);
     res.json({
       msg: "user found",
-      user
+      user,
     });
   } catch (err) {
     res.json({
@@ -54,7 +54,7 @@ module.exports.updateUser = async function (req, res) {
 //   });
 // }
 
-module.exports.deleteUserById = async function (req, res) {
+module.exports.deleteUser = async function (req, res) {
   let id = req.params.id;
   try {
     // let doc = await userModel.deleteOne(req.body);
