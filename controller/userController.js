@@ -16,9 +16,9 @@ module.exports.getUser = async function (req, res, next) {
 
 module.exports.updateUser = async function (req, res) {
   let id = req.params.id;
-  let user = userModel.findById(id);
   const dataToBeUpdated = req.body;
   try {
+    let user = await userModel.findById(id);
     if (user) {
       const keys = [];
       for (let key in dataToBeUpdated) {
@@ -27,7 +27,7 @@ module.exports.updateUser = async function (req, res) {
       for (let i = 0; i < keys.length; i++) {
         user[keys[i]] = dataToBeUpdated[keys[i]];
       }
-      const updatedData = user.save();
+      const updatedData = await user.save();
       res.json({
         message: "Data updated",
         updatedData
@@ -39,7 +39,8 @@ module.exports.updateUser = async function (req, res) {
     }
   } catch (err) {
     res.json({
-      msg: err.message
+      msg: [err.message, 'update user failed']
+
     })
   }
 }
@@ -100,7 +101,7 @@ module.exports.setCookies = function (req, res) {
   res.cookie('password', '123456789');
   res.send('cookies has been send');
 }
-module.exports.getAllUser = async function (req, res, next) {
+module.exports.allUser = async function (req, res, next) {
   try {
     let users = await userModel.find();
     res.json({

@@ -10,5 +10,10 @@ const authRouter = require('./Routers/authRouter');
 
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/", (req, res) => {
+  res.status(400).json({
+    message: 'page not found'
+  })
+})
 
 app.listen(5000);

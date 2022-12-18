@@ -1,9 +1,9 @@
 const express = require('express');
 const userRouter = express.Router();
 const { JWT_KEY } = require('../secrets');
-const { getUser, updateUser, postUser, deleteUser, getAllUser } = require('../controller/userController');
+const { getUser, updateUser, postUser, deleteUser, allUser } = require('../controller/userController');
 const { protectRoute, isAuthorised } = require('../helper');
-const { signup, login } = require('../controller/authController');
+const { signup, login, forgetPassword } = require('../controller/authController');
 
 userRouter
   .route("/login")
@@ -14,18 +14,26 @@ userRouter
   .post(signup)
 
 userRouter
+  .route('/forgetPasword')
+  .post(forgetPassword)
+
+userRouter
+  .route('/resetPassword/:token')
+  .post(resetPassword)
+
+userRouter.use(protectRoute)
+userRouter
   .route("/:id")
   .patch(updateUser)
   .delete(deleteUser)
 
-userRouter.use(protectRoute)
 userRouter
-  .route('/userProfile')
+  .route('/Profile')
   .get(getUser)
 
 userRouter.use(isAuthorised(['admin']))
 userRouter
-  .route('')
+  .route('/')
   .get(getAllUser)
 
 // userRouter

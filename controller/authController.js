@@ -63,3 +63,51 @@ module.exports.login = async function (req, res) {
     })
   }
 }
+
+module.exports.forgetPassword = async function (req, res) {
+  let { email } = req.body;
+  try {
+    const user = userModel.findOne({ email });
+    if (user) {
+      //reset token
+      const resetToken = user.createResetToken();
+      //create link
+      //https://xyz.com/resetPassord/resetToken
+      let resetLink = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
+      //send mail to user
+      //nodemailer
+    } else {
+      res.json({
+        msg: 'User not found'
+      })
+    }
+  } catch (err) {
+    res.status(500).json({
+      err: err.msg
+    })
+  }
+}
+
+module.exports.resetPassword = async function (req, res) {
+  try {
+    let token = req.params.token;
+    let { password, confirmPassword } = req.body;
+    const user = await userModel.findOne({ resetToken: token });
+    if (user) {
+      //resetpasswordhandler will update password in db
+      user.resetPasswordHandeler(password, confirmPassword);
+      await user.save();
+      res.json({
+        msg: 'Password Changed Successfully'
+      })
+    } else {
+      res.json({
+        msg: 'User not found'
+      })
+    }
+  } catch (err) {
+    res.json({
+      msg: err.message
+    })
+  }
+}

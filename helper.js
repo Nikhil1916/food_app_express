@@ -10,7 +10,7 @@ module.exports.protectRoute = async function (req, res, next) {
     let payloadObj = jwt.verify(token, JWT_KEY);
     const user = await userModel.findById(payloadObj.payload);
     req.id = user.id;
-    req.role = user.role;
+    req.role = user.roles;
     if (user) {
       next();
     } else {
@@ -34,7 +34,7 @@ module.exports.isAuthorised = function (roles) {
       next();
     } else {
       res.status(401).json({
-        msg: 'operation not allowed to user'
+        msg: 'Invalid role'
       })
     }
   }
