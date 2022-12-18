@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const { JWT_KEY } = require('../secrets');
 const { getUser, updateUser, postUser, deleteUser, allUser } = require('../controller/userController');
 const { protectRoute, isAuthorised } = require('../helper');
-const { signup, login, forgetPassword } = require('../controller/authController');
+const { signup, login, forgetPassword, logout, resetPassword } = require('../controller/authController');
 
 userRouter
   .route("/login")
@@ -38,7 +38,7 @@ userRouter
 userRouter.use(isAuthorised(['admin']))
 userRouter
   .route('/')
-  .get(getAllUser)
+  .get(allUser)
 
 // userRouter
 //   .route("/setCookies")

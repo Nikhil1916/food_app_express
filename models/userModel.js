@@ -1,11 +1,11 @@
 const moongoose = require('mongoose');
 const { db_link } = require("../secrets");
 const email_validator = require("email-validator");
+const uuidv4 = require("uuid");
 const bcrypt = require('bcrypt');
-import { stringify, v4 as uuidv4 } from "uuid";
 moongoose.connect(db_link)
   .then((db) => {
-    console.log("db connected");
+    console.log("user db connected");
   })
   .catch((err) => {
     console.log(err);

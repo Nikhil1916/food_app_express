@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 var cookieParser = require('cookie-parser')
-
+const planModel = require('./models/planModel ');
 app.use(express.json());
 app.use(cookieParser());
 
