@@ -14,6 +14,10 @@ userRouter
   .post(signup)
 
 userRouter
+  .route("/logout")
+  .post(logout)
+
+userRouter
   .route('/forgetPasword')
   .post(forgetPassword)
 
@@ -50,4 +54,5 @@ userRouter
 // app.get("/user/:id", middleware1, (req, res, next) => {
 //   next();
 // }, middleware2)
+
 module.exports = userRouter;
