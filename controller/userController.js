@@ -66,7 +66,8 @@ module.exports.deleteUser = async function (req, res) {
     // console.log(del);
     res.json({
       message: "user deleted",
-      query: req.params.id
+      query: req.params.id,
+      user
     });
   } catch (err) {
     res.json({
@@ -75,12 +76,12 @@ module.exports.deleteUser = async function (req, res) {
   }
 }
 
-module.exports.getUserById = function (req, res, next) {
-  // console.log(req.params);
-  let userData = user.find((data) => data.id == req.params.id);
-  res.json({ message: "user id called", id: req.params, userData });
-  next();
-}
+// module.exports.getUserById = function (req, res, next) {
+//   // console.log(req.params);
+//   let userData = user.find((data) => data.id == req.params.id);
+//   res.json({ message: "user id called", id: req.params, userData });
+//   next();
+// }
 
 module.exports.getCookies = function (req, res) {
   let cookie = req.cookies;
@@ -101,6 +102,7 @@ module.exports.setCookies = function (req, res) {
   res.cookie('password', '123456789');
   res.send('cookies has been send');
 }
+
 module.exports.allUser = async function (req, res, next) {
   try {
     let users = await userModel.find();
