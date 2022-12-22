@@ -1,8 +1,7 @@
 const moongoose = require('mongoose');
-const { validate } = require('moongose/models/user_model');
 const { db_link } = require("../secrets");
 moongoose.connect(db_link).then((db) => {
-  console.log("plan db connectes");
+  console.log("plan db connected");
 })
   .catch((err) => {
     console.log(err);
@@ -13,7 +12,7 @@ const planSchema = moongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    maxLength: [20, 'Plan name should not exceed 20 Chars']
+    maxLength: [20, `Plan name should not exceed 20 Chars`]
   },
   price: {
     type: Number,
@@ -35,14 +34,4 @@ const planSchema = moongoose.Schema({
 })
 const planModel = moongoose.model("planModel", planSchema);
 
-(async function createPlan() {
-  const plan = {
-    name: 'gold',
-    price: '100',
-    duration: '20',
-    discount: '10'
-  }
-  const planCreate = await planModel.create(plan);
-  console.log(planCreate);
-})()
 module.exports = planModel;
