@@ -3,7 +3,7 @@ module.exports.getUser = async function (req, res, next) {
   let id = req.params.id ?? req.id;
   try {
     let user = await userModel.findById(id);
-    res.json({
+    return res.json({
       msg: "user found",
       user,
     });
@@ -28,12 +28,12 @@ module.exports.updateUser = async function (req, res) {
         user[keys[i]] = dataToBeUpdated[keys[i]];
       }
       const updatedData = await user.save();
-      res.json({
+      return res.json({
         message: "Data updated",
         updatedData
       })
     } else {
-      res.json({
+      return res.json({
         msg: 'user not found'
       })
     }
@@ -44,7 +44,6 @@ module.exports.updateUser = async function (req, res) {
     })
   }
 }
-
 
 // module.exports.postUser = function (req, res) {
 //   //then i can put this in db 
@@ -62,8 +61,6 @@ module.exports.deleteUser = async function (req, res) {
     // let doc = await userModel.findOneAndRemove(req.body); //or delete one just diff in the value returned
     // console.log(doc, "user delete fn");
     let user = await userModel.findByIdAndDelete(id); //for normal remove steps
-    // console.log(user);
-    // console.log(del);
     res.json({
       message: "user deleted",
       query: req.params.id,
@@ -85,7 +82,7 @@ module.exports.deleteUser = async function (req, res) {
 
 module.exports.getCookies = function (req, res) {
   let cookie = req.cookies;
-  console.log(cookie);
+  // console.log(cookie);
   res.send({ cookie });
 }
 

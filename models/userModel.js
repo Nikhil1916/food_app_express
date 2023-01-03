@@ -3,6 +3,7 @@ const { db_link } = require("../secrets");
 const email_validator = require("email-validator");
 const uuidv4 = require("uuid");
 const bcrypt = require('bcrypt');
+
 moongoose.connect(db_link)
   .then((db) => {
     console.log("user db connected");
@@ -16,7 +17,6 @@ const userSchema = moongoose.Schema({
     type: String,
     required: true
   },
-
   email: {
     type: String,
     required: true,
@@ -25,13 +25,11 @@ const userSchema = moongoose.Schema({
       return email_validator.validate(this.email)
     }
   },
-
   password: {
     type: String,
     required: true,
     minLength: 7
   },
-
   confirmPassword: {
     type: String,
     required: true,
@@ -40,7 +38,6 @@ const userSchema = moongoose.Schema({
       return this.password == this.confirmPassword;
     }
   },
-
   roles: {
     type: String,
     enum: ['admin', 'user', 'restaurantowner'],
