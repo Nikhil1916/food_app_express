@@ -29,9 +29,13 @@ const planSchema = moongoose.Schema({
     }, 'Discount should not exceed 50%']
   },
   ratingsAverage: {
-    type: Number
+    type: Number,
+    default: 0
+  },
+  nor: { //no of reviews
+    type: Number,
+    default: 0
   }
 })
 const planModel = moongoose.model("planModel", planSchema);
-
 module.exports = planModel;

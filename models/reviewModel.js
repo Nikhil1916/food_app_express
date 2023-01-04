@@ -1,4 +1,4 @@
-const moongoose = require("moongose");
+const moongoose = require("mongoose");
 const { db_link } = require("../secrets");
 moongoose.connect(db_link)
   .then((db) => {
@@ -30,11 +30,11 @@ const reviewSchema = moongoose.Schema({
   },
   plan: {
     type: moongoose.Schema.ObjectId,
-    ref: 'planModel ',
-    required: [true, `review must belong to a user`]
+    ref: 'planModel',
+    required: [true, `plan must belong to a user`]
   }
 })
-reviewSchema.pre(/^find/, function (req, res, next) {
+reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: "user",
     select: "name profileImage"
