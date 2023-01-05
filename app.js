@@ -8,11 +8,13 @@ const userRouter = require('./Routers/userRouter');
 const authRouter = require('./Routers/authRouter');
 const planRouter = require('./Routers/planRouter');
 const reviewRouter = require('./Routers/reviewRouter');
+const bookingRouter = require('./Routers/bookingRouter');
 
 app.use("/users", userRouter);
 // app.use("/auth", authRouter);
 app.use("/plans", planRouter);
 app.use("/review", reviewRouter);
+app.use("/booking", bookingRouter);
 app.use("/", (req, res) => {
   res.status(400).json({
     message: 'page not found'
