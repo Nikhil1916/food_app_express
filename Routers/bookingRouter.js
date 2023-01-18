@@ -9,6 +9,6 @@ bookingRouter.route('/createSession').get(function (req, res) {
 });
 
 // bookingRouter.use(protectRoute);
-bookingRouter.route('/createSession').post(createSession);
+bookingRouter.route('/createSession').post(createSession);//check for plan id needed with real data
 
 module.exports = bookingRouter;

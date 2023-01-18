@@ -18,7 +18,7 @@ userRouter
   .post(logout)
 
 userRouter
-  .route('/forgetPasword')
+  .route('/forgetPassword')
   .post(forgetPassword)
 
 userRouter

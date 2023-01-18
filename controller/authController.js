@@ -1,6 +1,8 @@
 const userModel = require('../models/userModel');
 var jwt = require('jsonwebtoken');
 const { JWT_KEY } = require('../secrets');
+const { sendMail } = require('../Utility/nodemailer');
+const { use } = require('moongose/routes');
 
 // function getSignUpPage(req, res) {
 //   console.log(__dirname);
@@ -12,10 +14,14 @@ module.exports.signup = async function (req, res) {
   try {
     let data = req.body;
     let user = await userModel.create(data);
-    res.json({
-      message: "user added",
-      user
-    })
+    if (user) {
+      //send mail
+      await sendMail("signup", user);
+      res.json({
+        message: "user added",
+        user
+      })
+    }
   } catch (err) {
     res.json({
       msg: "error occured",
@@ -43,6 +49,7 @@ module.exports.login = async function (req, res) {
     const user = await userModel.findOne({ email: email });
     if (user) {
       //add becrypt as password is hashed,bcrypt-compare
+      await sendMail("signup", user);
       res.cookie('isLoggedIn', true)
       if (password == user.password) {
         let uid = user['_id'];
@@ -67,21 +74,30 @@ module.exports.login = async function (req, res) {
 module.exports.forgetPassword = async function (req, res) {
   let { email } = req.body;
   try {
-    const user = userModel.findOne({ email });
+    const user = await userModel.findOne({ email });
+    console.log(user);
     if (user) {
+      console.log(1);
       //reset token
       const resetToken = user.createResetToken();
       //create link
       //https://xyz.com/resetPassord/resetToken
-      let resetLink = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
+      let resetPasswordLink = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
       //send mail to user
       //nodemailer
+      console.log("forget");
+      sendMail("forgetpassword", { email, resetPasswordLink });
+      res.json({
+        msg: "reset link send to your mail"
+      })
     } else {
+      console.log(1);
       res.json({
         msg: 'User not found'
       })
     }
   } catch (err) {
+    console.log(3);
     res.status(500).json({
       err: err.msg
     })
