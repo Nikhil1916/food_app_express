@@ -3,7 +3,6 @@ const stripe = require('stripe')(SK);
 const planModel = require('../models/planModel');
 const userModel = require('../models/userModel');
 module.exports.createSession = async function (req, res) {
-  console.log("create session");
   try {
     // const userId = req.id;
     // const planId = req.params.id;

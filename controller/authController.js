@@ -5,7 +5,6 @@ const { sendMail } = require('../Utility/nodemailer');
 const { use } = require('moongose/routes');
 
 // function getSignUpPage(req, res) {
-//   console.log(__dirname);
 //   res.sendFile('F:/FoodApp/public/index.html');
 //   // res.sendFile('../public/index.html', { root: __dirname });
 // }
@@ -75,31 +74,26 @@ module.exports.forgetPassword = async function (req, res) {
   let { email } = req.body;
   try {
     const user = await userModel.findOne({ email });
-    console.log(user);
     if (user) {
-      console.log(1);
       //reset token
-      const resetToken = user.createResetToken();
+      const resetToken = await user.createResetToken();
       //create link
       //https://xyz.com/resetPassord/resetToken
-      let resetPasswordLink = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
+      const resetPasswordLink = `${req.protocol}://${req.get('host')}/users/resetPassword/${resetToken}`;
       //send mail to user
       //nodemailer
-      console.log("forget");
-      sendMail("forgetpassword", { email, resetPasswordLink });
+      await sendMail("forgetpassword", { email, resetPasswordLink });
       res.json({
         msg: "reset link send to your mail"
       })
     } else {
-      console.log(1);
       res.json({
         msg: 'User not found'
       })
     }
   } catch (err) {
-    console.log(3);
     res.status(500).json({
-      err: err.msg
+      err: err.message
     })
   }
 }
@@ -111,7 +105,7 @@ module.exports.resetPassword = async function (req, res) {
     const user = await userModel.findOne({ resetToken: token });
     if (user) {
       //resetpasswordhandler will update password in db
-      user.resetPasswordHandeler(password, confirmPassword);
+      user.resetPasswordHandler(password, confirmPassword);
       await user.save();
       res.json({
         msg: 'Password Changed Successfully'

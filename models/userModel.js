@@ -1,10 +1,10 @@
-const moongoose = require('mongoose');
+const mongoose = require('mongoose');
 const { db_link } = require("../secrets");
 const email_validator = require("email-validator");
-const uuidv4 = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const bcrypt = require('bcrypt');
 
-moongoose.connect(db_link)
+mongoose.connect(db_link)
   .then((db) => {
     console.log("user db connected");
   })
@@ -12,7 +12,7 @@ moongoose.connect(db_link)
     console.log(err);
   });
 
-const userSchema = moongoose.Schema({
+const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -43,11 +43,11 @@ const userSchema = moongoose.Schema({
     enum: ['admin', 'user', 'restaurantowner'],
     default: 'user'
   },
-  resetToken: String
+  resetToken: { type: String }
   // profileImage: {
   //   type: String,
   //   default: 'img.png'
-  // }
+  // } //will add this functionlity when map with front end as in demo website not able to see this
 })
 
 userSchema.pre("save", async function () {
@@ -57,9 +57,11 @@ userSchema.pre("save", async function () {
   // this.password = hashedString;
 })
 
-userSchema.methods.createResetToken = function () {
+userSchema.methods.createResetToken = async function () {
   const resetToken = uuidv4();
   this.resetToken = resetToken;
+  // this.confirmPassword = this.password;// will do if confirm password is required field otherwise it will throw validation error 
+  await this.save();
   return resetToken;
 }
 
@@ -70,5 +72,5 @@ userSchema.methods.resetPasswordHandler = function (password, confirmPassword) {
 }
 
 //models
-const userModel = moongoose.model("userModel", userSchema);
+const userModel = mongoose.model("userModel", userSchema);
 module.exports = userModel;

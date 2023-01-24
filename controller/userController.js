@@ -59,7 +59,6 @@ module.exports.deleteUser = async function (req, res) {
   try {
     // let doc = await userModel.deleteOne(req.body);
     // let doc = await userModel.findOneAndRemove(req.body); //or delete one just diff in the value returned
-    // console.log(doc, "user delete fn");
     let user = await userModel.findByIdAndDelete(id); //for normal remove steps
     res.json({
       message: "user deleted",
@@ -80,11 +79,10 @@ module.exports.deleteUser = async function (req, res) {
 //   next();
 // }
 
-module.exports.getCookies = function (req, res) {
-  let cookie = req.cookies;
-  // console.log(cookie);
-  res.send({ cookie });
-}
+// module.exports.getCookies = function (req, res) {
+//   let cookie = req.cookies;
+//   res.send({ cookie });
+// }
 
 module.exports.deleteUsers = function (req, res) {
   user = {},
@@ -93,12 +91,12 @@ module.exports.deleteUsers = function (req, res) {
     });
 }
 
-module.exports.setCookies = function (req, res) {
-  // res.setHeader('Set-Cookie', 'isLogged=true');
-  res.cookie('isLoggedIn', 'false', { maxAge: 10000, secure: true });
-  res.cookie('password', '123456789');
-  res.send('cookies has been send');
-}
+// module.exports.setCookies = function (req, res) {
+//   // res.setHeader('Set-Cookie', 'isLogged=true');
+//   res.cookie('isLoggedIn', 'false', { maxAge: 10000, secure: true });
+//   res.cookie('password', '123456789');
+//   res.send('cookies has been send');
+// }
 
 module.exports.allUser = async function (req, res, next) {
   try {

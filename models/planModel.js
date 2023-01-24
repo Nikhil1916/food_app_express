@@ -1,13 +1,13 @@
-const moongoose = require('mongoose');
+const mongoose = require('mongoose');
 const { db_link } = require("../secrets");
-moongoose.connect(db_link).then((db) => {
+mongoose.connect(db_link).then((db) => {
   console.log("plan db connected");
 })
   .catch((err) => {
     console.log(err);
   })
 
-const planSchema = moongoose.Schema({
+const planSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -37,5 +37,5 @@ const planSchema = moongoose.Schema({
     default: 0
   }
 })
-const planModel = moongoose.model("planModel", planSchema);
+const planModel = mongoose.model("planModel", planSchema);
 module.exports = planModel;

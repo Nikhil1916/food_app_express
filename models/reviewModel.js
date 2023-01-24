@@ -1,6 +1,6 @@
-const moongoose = require("mongoose");
+const mongoose = require("mongoose");
 const { db_link } = require("../secrets");
-moongoose.connect(db_link)
+mongoose.connect(db_link)
   .then((db) => {
     console.log("review db connected");
   })
@@ -8,7 +8,7 @@ moongoose.connect(db_link)
     console.log(err);
   });
 
-const reviewSchema = moongoose.Schema({
+const reviewSchema = mongoose.Schema({
   review: {
     type: String,
     required: [true, `review is required`]
@@ -24,12 +24,12 @@ const reviewSchema = moongoose.Schema({
     default: Date.now()
   },
   user: {
-    type: moongoose.Schema.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'userModel',
     required: [true, `review must belong to a user`]
   },
   plan: {
-    type: moongoose.Schema.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'planModel',
     required: [true, `plan must belong to a user`]
   }
@@ -41,5 +41,5 @@ reviewSchema.pre(/^find/, function (next) {
   }).populate("plan")
   next();
 })
-const reviewModel = moongoose.model("reviewModel", reviewSchema);
+const reviewModel = mongoose.model("reviewModel", reviewSchema);
 module.exports = reviewModel;
