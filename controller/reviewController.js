@@ -45,7 +45,8 @@ module.exports.getPlanReview = async function (req, res) {
   try {
     const planId = req.params.id;
     let reviews = await reviewModel.find();
-    reviews = reviews.filter((review) => review.plan?.["_id"] == planId);
+    // try toString or valueof() on id as getting new Object()   
+    reviews = reviews.filter((review) => review.plan?.["_id"]?.toString() == planId);
     if (reviews) {
       res.json({
         msg: `reviews found`,
